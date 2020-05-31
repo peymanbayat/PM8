@@ -6,7 +6,8 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import plot_confusion_matrix, plot_roc_curve, plot_precision_recall_curve
+from sklearn.metrics import plot_confusion_matrix
+from matplotlib.colors import ListedColormap
 from sklearn.metrics import precision_score, recall_score,mean_squared_error
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -42,9 +43,21 @@ def main():
 				plot_confusion_matrix(model,x_test,y_test,display_labels=class_names,cmap='viridis',)
 				slt.pyplot()
 
-			if 'ROC Curve' in listofmetrics:
-				slt.subheader("ROC Curve")
-				plot_roc_curve(model, x_test, y_test)
+			if 'Color Map' in listofmetrics:
+				slt.subheader("Color Map - Feature Scaling has been applied")
+				X_set, y_set = x_test, y_test
+				X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
+				                     np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
+				plt.contourf(X1, X2, model.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape),
+				             alpha = 0.75, cmap = ListedColormap(('red', 'green')))
+				plt.xlim(X1.min(), X1.max())
+				plt.ylim(X2.min(), X2.max())
+				for i, j in enumerate(np.unique(y_set)):
+				    plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
+				                c = ListedColormap(('red', 'green'))(i), label = j)
+				plt.xlabel('Age')
+				plt.ylabel('Estimated Salary')
+				plt.legend()
 				slt.pyplot()
 	        
 
@@ -56,7 +69,7 @@ def main():
 		classifier = slt.sidebar.selectbox("Classifier", ("Kernel SVM","Naive Bayes","Support Vector Machine"))
 		if classifier == 'Support Vector Machine':
 			slt.sidebar.subheader("Model Hyperparameters")
-			metrics = slt.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix','ROC Curve'))
+			metrics = slt.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix','Color Map'))
 
 			if slt.sidebar.button("Classify", key='classify'):
 				slt.subheader("Support Vector Machine  Results")
@@ -70,7 +83,7 @@ def main():
 				
 		if classifier == 'Kernel SVM':
 			slt.sidebar.subheader("Model Hyperparameters")
-			metrics = slt.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix','ROC Curve'))
+			metrics = slt.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix','Color Map'))
 			kernel = slt.sidebar.radio("Kernel", ("rbf", "linear"), key='kernel')
 
 			if slt.sidebar.button("Classify", key='classify'):
@@ -84,7 +97,7 @@ def main():
 				plot_values(metrics)
 		if classifier == 'Naive Bayes':
 			slt.sidebar.subheader("Model Hyperparameters")
-			metrics = slt.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix','ROC Curve'))
+			metrics = slt.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix','Color Map'))
 			if slt.sidebar.button("Classify", key='classify'):
 				slt.subheader("Naive Bayes Results")
 				model = GaussianNB()
