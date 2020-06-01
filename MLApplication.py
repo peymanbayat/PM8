@@ -119,9 +119,9 @@ def main():
 	elif select=='Regression':
 		@slt.cache(persist=True)
 		def fetch_data():
-			data=pd.read_csv('Ecommerce_Customers.csv')
+			data=pd.read_csv('salary_data.csv')
 
-			x=data.iloc[:,[3,4,5,6]].values
+			x=data.iloc[:,[0:-1]].values
 			y=data.iloc[:,-1].values
 
 			return x,y
