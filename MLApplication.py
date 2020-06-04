@@ -87,7 +87,7 @@ def main():
 		if classifier == 'Kernel SVM':
 			slt.sidebar.subheader("Model Hyperparameters")
 			metrics = slt.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix','Color Map'))
-			kernel = slt.sidebar.radio("Kernel", ("rbf", "linear"), key='kernel')
+			kernel = slt.sidebar.radio("Kernel", ("rbf","poly","sigmoid", "linear"), key='kernel')
 
 			if slt.sidebar.button("Classify", key='classify'):
 				slt.subheader("Kernel SVM Results")
