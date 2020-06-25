@@ -16,13 +16,13 @@ import numpy as np
 import scipy.cluster.hierarchy as sch
 
 def main():
-	slt.title('Visualize Classification and Regression ')
+	slt.title('Visualize Classification, Regression and Clustering')
 	slt.subheader('Classifiers - Naive Bayes , Kernel SVM , Support Vector Machine')
 	slt.subheader('Regression - Linear Regression , Polynomial Regression , Random Forest')
 	slt.subheader('Clustering - K Means Clustering, Hierarchical Clustering')
 
 	slt.sidebar.title("SELECT YOUR ALGORITHM")
-	select=slt.sidebar.selectbox("Try Classification or Regression",("Classification", "Regression","Clustering"))
+	select=slt.sidebar.selectbox("Try Classification, Regression or Clustering",("Classification", "Regression","Clustering"))
 	if select=='Classification':
 		@slt.cache(persist=True)
 		def fetch_data():
